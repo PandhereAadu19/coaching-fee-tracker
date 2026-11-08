@@ -1,0 +1,20 @@
+---
+description: Fee tracker project rules
+alwaysApply: true
+---
+Project: coaching fee tracker and parent portal. Read PLAN.md before any task.
+Stack: Next.js App Router, TypeScript strict, Tailwind, Prisma + Postgres, Zod, jose JWT, Vitest.
+Rules:
+- Store all money as integer paise. Convert to rupees only for display.
+- Business logic lives in /lib as pure functions with no framework imports, and every function there has Vitest tests.
+- Never read today's date directly. Use getToday() from /lib/today.ts, which reads DEMO_TODAY from env, else the real date.
+- Instalment status is derived, never stored.
+- Validate every API input and form with Zod. Check the session role inside every route handler, not only in middleware.
+- A parent can only access students linked to their own parentUserId.
+- No secrets in code. Read them from process.env only. Do not log secrets or phone numbers.
+- Every list and page needs loading, empty and error states. No dead buttons.
+- UI: white background, one accent colour (indigo-600), red only for overdue, Inter + Noto Sans Devanagari, tap targets at least 48px, body text at least 16px, minimal clutter.
+- All user-facing text goes through the i18n dictionaries (en and hi).
+- Fully responsive. Parent pages: mobile-first at 360px, two-column layout from md. Accounts pages: designed for desktop, tables scroll sideways on small screens.
+- Do not ask me questions. Make a reasonable choice, then list your assumptions at the end.
+- Keep files small and readable. Prefer clear names over comments.
