@@ -51,8 +51,8 @@ A fee ledger, parent portal and accounts dashboard for a Jaipur coaching institu
 Prerequisites: Node.js 20 or newer, and a PostgreSQL database (a free Neon database works).
 
 ```bash
-git clone <YOUR GITHUB URL>
-cd <repo-folder>
+git clone https://github.com/PandhereAadu19/coaching-fee-tracker
+cd coaching-fee-tracker
 npm install
 cp .env.example .env        # then fill in the values
 npx prisma migrate dev
