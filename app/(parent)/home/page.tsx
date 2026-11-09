@@ -1,14 +1,15 @@
-import LogoutButton from "../../components/LogoutButton";
 import { requireParentPage } from "../../../lib/guards";
+import { getT } from "../../../lib/i18n-server";
+
 export const instant = false;
 
 export default async function ParentHome() {
   const user = await requireParentPage();
+  const { t } = await getT();
   return (
-    <main className="mx-auto w-full max-w-md space-y-4 p-6">
-      <h1 className="text-2xl font-semibold">Hello, {user.name}</h1>
+    <div className="space-y-2">
+      <h1 className="text-2xl font-semibold">{t("parent.hello", { name: user.name })}</h1>
       <p className="text-neutral-600">Parent home placeholder.</p>
-      <LogoutButton />
-    </main>
+    </div>
   );
 }

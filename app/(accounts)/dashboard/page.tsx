@@ -1,14 +1,15 @@
-import LogoutButton from "../../components/LogoutButton";
 import { requireAccountsPage } from "../../../lib/guards";
+import { getT } from "../../../lib/i18n-server";
+
 export const instant = false;
 
 export default async function Dashboard() {
   const user = await requireAccountsPage();
+  const { t } = await getT();
   return (
-    <main className="mx-auto w-full max-w-3xl space-y-4 p-6">
-      <h1 className="text-2xl font-semibold">Accounts dashboard</h1>
+    <div className="space-y-2">
+      <h1 className="text-2xl font-semibold">{t("dash.title")}</h1>
       <p className="text-neutral-600">Signed in as {user.name}. Placeholder page.</p>
-      <LogoutButton />
-    </main>
+    </div>
   );
 }
