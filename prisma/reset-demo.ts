@@ -21,6 +21,16 @@ async function main() {
     data: { status: "ACTIVE", exitDate: null },
   });
 
+  await db.riskFlag.updateMany({
+    where: { status: "OPEN" },
+    data: { aiNote: null, aiNoteSource: null },
+  });
+
+  // Reminders created by the job (the seeded ones use different, generic text)
+  await db.reminder.deleteMany({
+    where: { OR: [{ message: { startsWith: "Dear " } }, { message: { startsWith: "प्रिय " } }] },
+  });
+
   console.log(
     `Reset done: ${payments.count} payments, ${receipts.count} receipts removed, ${students.count} students reactivated.`
   );
