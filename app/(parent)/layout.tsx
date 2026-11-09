@@ -19,7 +19,7 @@ export default async function ParentLayout({ children }: { children: ReactNode }
   return (
     <LangProvider lang={lang} messages={messages}>
       <div className="min-h-screen bg-white">
-        <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white">
+        <header className="sticky top-0 z-10 border-b border-neutral-200 bg-white print:hidden">
           <div className="mx-auto flex h-16 w-full max-w-md items-center justify-between gap-3 px-4 md:max-w-5xl md:px-6">
             <span className="text-lg font-semibold text-indigo-700">{t("app.name")}</span>
             <div className="hidden md:block">
@@ -32,7 +32,7 @@ export default async function ParentLayout({ children }: { children: ReactNode }
           </div>
         </header>
         <div className="mx-auto w-full max-w-md px-4 pb-28 pt-6 md:max-w-5xl md:px-6 md:pb-10">{children}</div>
-        <div className="fixed inset-x-0 bottom-0 z-10 border-t border-neutral-200 bg-white md:hidden">
+        <div className="fixed inset-x-0 bottom-0 z-10 border-t border-neutral-200 bg-white md:hidden print:hidden">
           <NavLinks variant="bottom" items={items} />
         </div>
       </div>
