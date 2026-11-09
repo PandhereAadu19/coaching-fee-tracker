@@ -1,13 +1,9 @@
+/** Today's calendar date as UTC midnight, so it matches how all other dates are stored. */
 export function getToday(): Date {
-  const demo = process.env.DEMO_TODAY?.trim();
-  if (demo) {
-    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(demo);
-    if (match) {
-      const year = Number(match[1]);
-      const month = Number(match[2]);
-      const day = Number(match[3]);
-      return new Date(year, month - 1, day);
-    }
+  const env = process.env.DEMO_TODAY;
+  if (env && /^\d{4}-\d{2}-\d{2}$/.test(env)) {
+    return new Date(`${env}T00:00:00.000Z`);
   }
-  return new Date();
+  const now = new Date();
+  return new Date(Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()));
 }

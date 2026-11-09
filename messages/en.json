@@ -11,6 +11,7 @@
     "common.error": "Something went wrong. Please try again.",
     "common.empty": "Nothing to show yet",
     "common.back": "Back",
+    "common.clear": "Clear",
     "status.paid": "Paid",
     "status.due": "Due soon",
     "status.upcoming": "Upcoming",

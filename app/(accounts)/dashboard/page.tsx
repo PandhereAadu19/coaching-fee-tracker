@@ -106,7 +106,11 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
     <div className="space-y-6">
       <PageHeader title={t("dash.title")} />
 
-      <form action="/dashboard" className="flex flex-wrap items-end gap-3">
+      <form
+        key={`${centreId ?? ""}|${batchId ?? ""}|${bucket ?? ""}`}
+        action="/dashboard"
+        className="flex flex-wrap items-end gap-3"
+      >
         <label className="space-y-1 text-sm text-neutral-600">
           {t("dash.centre")}
           <select name="centre" defaultValue={centreId ?? ""} className={`${select} block`}>
@@ -143,8 +147,11 @@ export default async function Dashboard({ searchParams }: { searchParams: Promis
         <button className="h-12 rounded-xl bg-indigo-600 px-5 text-base font-medium text-white hover:bg-indigo-700">
           OK
         </button>
-        <Link href="/dashboard" className="flex h-12 items-center px-2 text-base text-neutral-600 underline">
-          ✕
+        <Link
+          href="/dashboard"
+          className="flex h-12 items-center rounded-xl border border-neutral-300 px-4 text-base text-neutral-700 hover:bg-neutral-50"
+        >
+          {t("common.clear")}
         </Link>
       </form>
 
