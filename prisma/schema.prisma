@@ -1,0 +1,227 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  PARENT
+  ACCOUNTS
+}
+
+enum StudentStatus {
+  ACTIVE
+  EXITED
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCESS
+  FAILED
+  CANCELLED
+}
+
+enum ReminderStatus {
+  PENDING
+  SENT
+  CANCELLED
+}
+
+enum RefundStatus {
+  REQUESTED
+  APPROVED
+  PAID
+  REJECTED
+}
+
+enum FlagStatus {
+  OPEN
+  FALSE_FLAG
+  ACTIONED
+}
+
+enum TaskStatus {
+  OPEN
+  DONE
+}
+
+model Centre {
+  id      String  @id @default(cuid())
+  name    String
+  batches Batch[]
+}
+
+model Batch {
+  id        String    @id @default(cuid())
+  centreId  String
+  name      String
+  startDate DateTime
+  endDate   DateTime
+  centre    Centre    @relation(fields: [centreId], references: [id])
+  students  Student[]
+
+  @@index([centreId])
+}
+
+model User {
+  id        String    @id @default(cuid())
+  role      Role
+  phone     String    @unique
+  name      String
+  language  String
+  consentAt DateTime?
+  students  Student[]
+}
+
+model Student {
+  id           String        @id @default(cuid())
+  code         String        @unique
+  name         String
+  batchId      String
+  parentUserId String
+  status       StudentStatus @default(ACTIVE)
+  exitDate     DateTime?
+  batch        Batch         @relation(fields: [batchId], references: [id])
+  parent       User          @relation(fields: [parentUserId], references: [id])
+  feePlan      FeePlan?
+  refunds      Refund[]
+  attendance   Attendance[]
+  testScores   TestScore[]
+  riskFlags    RiskFlag[]
+
+  @@index([batchId])
+  @@index([parentUserId])
+}
+
+model FeePlan {
+  id          String       @id @default(cuid())
+  studentId   String       @unique
+  totalFee    Int
+  discount    Int
+  gstRate     Int
+  student     Student      @relation(fields: [studentId], references: [id])
+  instalments Instalment[]
+}
+
+model Instalment {
+  id        String     @id @default(cuid())
+  planId    String
+  seq       Int
+  dueDate   DateTime
+  amount    Int
+  plan      FeePlan    @relation(fields: [planId], references: [id])
+  payments  Payment[]
+  reminders Reminder[]
+
+  @@unique([planId, seq])
+  @@index([dueDate])
+}
+
+model Payment {
+  id             String        @id @default(cuid())
+  instalmentId   String?
+  amount         Int
+  method         String
+  reference      String
+  status         PaymentStatus
+  paidAt         DateTime?
+  idempotencyKey String?       @unique
+  instalment     Instalment?   @relation(fields: [instalmentId], references: [id])
+  receipt        Receipt?
+
+  @@index([instalmentId])
+}
+
+model Receipt {
+  id         String  @id @default(cuid())
+  paymentId  String  @unique
+  number     String  @unique
+  baseAmount Int
+  gstAmount  Int
+  total      Int
+  payment    Payment @relation(fields: [paymentId], references: [id])
+}
+
+model Reminder {
+  id           String         @id @default(cuid())
+  instalmentId String
+  scheduledFor DateTime
+  language     String
+  message      String
+  status       ReminderStatus
+  instalment   Instalment     @relation(fields: [instalmentId], references: [id])
+
+  @@index([instalmentId])
+  @@index([scheduledFor])
+}
+
+model Refund {
+  id            String       @id @default(cuid())
+  studentId     String
+  amount        Int
+  breakdownJson Json
+  requestedAt   DateTime
+  payBy         DateTime
+  status        RefundStatus
+  student       Student      @relation(fields: [studentId], references: [id])
+
+  @@index([studentId])
+}
+
+model Attendance {
+  studentId String
+  month     DateTime
+  percent   Int
+  student   Student  @relation(fields: [studentId], references: [id])
+
+  @@id([studentId, month])
+}
+
+model TestScore {
+  id        String   @id @default(cuid())
+  studentId String
+  testName  String
+  date      DateTime
+  score     Int
+  student   Student  @relation(fields: [studentId], references: [id])
+
+  @@index([studentId])
+}
+
+model RiskFlag {
+  id           String           @id @default(cuid())
+  studentId    String
+  score        Int
+  reasonsJson  Json
+  aiNote       String?
+  aiNoteSource String?
+  status       FlagStatus
+  createdAt    DateTime         @default(now())
+  student      Student          @relation(fields: [studentId], references: [id])
+  tasks        CounsellorTask[]
+
+  @@index([studentId])
+}
+
+model CounsellorTask {
+  id     String     @id @default(cuid())
+  flagId String
+  status TaskStatus
+  note   String?
+  flag   RiskFlag   @relation(fields: [flagId], references: [id])
+
+  @@index([flagId])
+}
+
+model OtpCode {
+  id        String   @id @default(cuid())
+  phone     String
+  codeHash  String
+  expiresAt DateTime
+  attempts  Int      @default(0)
+
+  @@index([phone])
+}
