@@ -76,9 +76,7 @@ export default async function RefundsPage({ searchParams }: { searchParams: Prom
         <label className="space-y-1 text-sm text-neutral-600">
           {t("dash.student")}
           <select name="studentId" defaultValue={studentId ?? ""} required className={`${field} block min-w-64`}>
-            <option value="" disabled>
-              –
-            </option>
+          <option value="">–</option>
             {students.map((s) => (
               <option key={s.id} value={s.id}>
                 {s.name} · {s.code}
