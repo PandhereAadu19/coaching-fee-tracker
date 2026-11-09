@@ -4,6 +4,7 @@ import { runReminderJob } from "../../../../lib/reminder-job";
 import { runRiskJob } from "../../../../lib/risk-job";
 import { safeEqual } from "../../../../lib/secure";
 import { getToday } from "../../../../lib/today";
+export const maxDuration = 60;
 
 export async function GET(req: Request) {
   const secret = process.env.CRON_SECRET;
